@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitly</title>
+    <style>
+        /* עיצוב כללי */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(120deg, #007bff, #6610f2);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: #fff;
+            color: #333;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2rem;
+            color: #007bff;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 1rem;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="url"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        button {
+            background: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        #result {
+            margin-top: 15px;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        #result p {
+            margin-bottom: 10px;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* רספונסיביות */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px 20px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>URL Shortener</h1>
+        <form id="short-form">
+            <label for="originalUrl">Enter a URL to shorten:</label>
+            <input type="url" id="originalUrl" name="originalUrl" required placeholder="e.g. http://example.com">
+            <button type="submit">Shorten URL</button>
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        document.getElementById("short-form").addEventListener("submit", async (e) => {
+            e.preventDefault(); // מניעת שליחה רגילה של הטופס
+
+            // קבלת הערך משדה הקלט
+            const urlInput = document.getElementById("originalUrl");
+            const originalUrl = urlInput.value; // שימוש בערך של הקלט
+
+            if (!originalUrl) {
+                document.getElementById("result").innerHTML = `Error: Please provide a URL.`;
+                return;
+            }
+            try {
+                // שליחת הבקשה לשרת
+                const response = await fetch('/link/shorten', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ originalUrl }), // העברת הנתון בתוך אובייקט
+                });
+                const result = await response.json();
+                if (!response.ok) {
+                    throw new Error(result.error || "An error occurred");
+                }
+                document.getElementById("result").innerHTML = `
+                <p>Short URL: <a href="/link/${result.shortUrl}" target="_blank">http://localhost:5555/link/${result.shortUrl}</a></p>`;
+            } catch (error) {
+                console.error('Error:', error.message);
+                document.getElementById("result").innerHTML = `Error: ${error.message}`;
+            }
+        });
+    </script>
+</body>
+
+</html>
