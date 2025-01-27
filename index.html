@@ -147,7 +147,7 @@
                     throw new Error(result.error || "An error occurred");
                 }
                 document.getElementById("result").innerHTML = `
-                <p>Short URL: <a href="/link/${result.shortUrl}" target="_blank">http://localhost:5555/link/${result.shortUrl}</a></p>`;
+                <p>Short URL: <a href="/link/${result.shortUrl}" target="_blank">${window.location.protocol}//${window.location.host}/link/${result.shortUrl}</a></p>`;
             } catch (error) {
                 console.error('Error:', error.message);
                 document.getElementById("result").innerHTML = `Error: ${error.message}`;
