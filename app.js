@@ -5,7 +5,7 @@ const path = require('path');
 const LinkRouter = require('./router/linkRouter');
 
 const app = express();
-const mongoUrl = mongodb+srv://databata123:databata123@cluster0.rwlgc.mongodb.net/school
+const mongoUrl = "mongodb+srv://databata123:databata123@cluster0.rwlgc.mongodb.net/school"
 // Connect to MongoDB
 mongoose.connect(mongoUrl).then(() => console.log('Connected to MongoDB'))
   .catch((err) => console.error('Could not connect to MongoDB:', err));
